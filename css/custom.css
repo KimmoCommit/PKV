@@ -1,0 +1,12 @@
+.login-panel{
+	margin-top:5%;
+
+}
+
+.custom-alert {
+	color:rgba(255,100,100,0.9);
+}
+
+.confirm-table td:first-child{
+	font-weight: bolder;
+}
