@@ -1,9 +1,7 @@
 <?php 
-header("Refresh: 5; URL=index.php");
+  header("Refresh:5 URL=index.php");
 ?>
-<?php 
-require 'includes/logout-module.php';
-?>
+
 <!DOCTYPE html>
 <html lang="fi">
 <?php 
@@ -24,8 +22,8 @@ require 'head.php';
         <div class="col-md-4">
           <div class="panel panel-default login-panel">
             <div class="panel-body">
-              <div class="alert alert-success">Käyttäjän luonti onnistui!</div>
-              <p style="font-size:80%">Siirrytään noin viiden (5) sekunnin kuluttua etusivulle..</p>
+              <div class="alert alert-info">Kirjauduit ulos järjestelmästä</div>
+              <p style="font-size:80%">Siirrytään etusivulle noin viiden (5) sekunnin kuluttua..</p>
             </div>
           </div>
 

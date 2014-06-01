@@ -72,7 +72,7 @@ public function getfName() {
 
 
 public function setlName($lname) {
-	$this->fname = trim($fname);
+	$this->lname = trim($lname);
 }
 
 public function getlName() {

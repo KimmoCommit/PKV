@@ -2,21 +2,29 @@
 require_once "account.php";
 session_start();
 
+
+if(isset($_SESSION["updateaccount"])){
+  $theaccount = $_SESSION["updateaccount"];
+} 
+
+if (isset($_SESSION["account"])){
+  $account = $_SESSION["account"];
+}
+
+
 if(isset($_POST["korjaa"])){
   header("location: accprofile.php");
   exit;
 }
 
-
-
 if(isset($_POST["confirm"])){
   try
   {
     require_once "accountPDO.php";
-    $newaccount = $_SESSION["newaccount"];
+    $theaccount = $_SESSION["updateaccount"];
     $usedb = new AccountPDO();
-    $id = $usedb->addAccount($newaccount);
-    $newaccount->setId($id);
+    $usedb->updateAccount($theaccount);
+    $_SESSION["account"] = $theaccount;
     
   } catch (Exception $error) {
     print($error->getMessage());
@@ -24,18 +32,11 @@ if(isset($_POST["confirm"])){
 
   }
   
-  unset($_SESSION["newaccount"]);
-  header("location: confirmed.php");
+  unset($_SESSION["theaccount"]);
+  header("location: accupdatesuccess.php");
   exit;
 }
 
-if(isset($_SESSION["newaccount"])){
-  $newaccount = $_SESSION["newaccount"];
-} 
-
-if (isset($_SESSION["account"])){
-  $account = $_SESSION["account"];
-}
 
 ?>
 <?php 
@@ -68,22 +69,22 @@ require 'head.php';
              <form method="post">
               <table class="table-condensed confirm-table">
                 <tr>
-                  <td>Etunimi:</td><td><?php print($newaccount->getfName()); ?> </td>
+                  <td>Etunimi:</td><td><?php print($theaccount->getfName()); ?> </td>
                 </tr>
                 <tr>
-                  <td>Sukunimi:</td><td><?php print($newaccount->getlName()); ?> </td>
+                  <td>Sukunimi:</td><td><?php print($theaccount->getlName()); ?> </td>
                 </tr>
                 <tr>
-                  <td>Puhelinnumero:</td><td><?php print($newaccount->getPhone()); ?> </td>
+                  <td>Puhelinnumero:</td><td><?php print($theaccount->getPhone()); ?> </td>
                 </tr>
                 <tr>
-                  <td>Sähköposti:</td><td><?php print($newaccount->getEmail()); ?></td>
+                  <td>Sähköposti:</td><td><?php print($theaccount->getEmail()); ?></td>
                 </tr>
                 <tr>
-                  <td>Salasana:</td><td> <?php print($newaccount->getPasswd()); ?></td>
+                  <td>Salasana:</td><td> <?php print($theaccount->getPasswd()); ?></td>
                 </tr>
                 <tr>
-                  <td>Rooli:</td><td> <?php print($newaccount->getRole()); ?></td>
+                  <td>Rooli:</td><td> <?php print($theaccount->getRole()); ?></td>
                 </tr>
               </table><br/>
               <button name="confirm" type="submit" class="btn btn-default  btn-success btn-block">Tallenna</button>
