@@ -16,10 +16,10 @@
        <?php if(isset($_SESSION["account"])){
         include 'includes/nav-links-normal.php';
       } ?>
-
+<!--
       <?php if(isset($_SESSION["account"]) && $_SESSION["account"]->getRole() == '1'){
         include 'includes/nav-links-admin.php';
-      } ?> 
+      } ?> -->
 
       
 

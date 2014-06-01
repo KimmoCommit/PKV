@@ -22,7 +22,7 @@ if (isset($_POST["revert"])) {
 }
 
 if (isset($_POST["updateAccount"])) {
-  $updateaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"]);
+  $updateaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"], $_POST["id"]);
   $fnameError = $updateaccount->checkfName();
   $lnameError = $updateaccount->checklName();
   $phoneError = $updateaccount->checkPhone();
@@ -41,9 +41,6 @@ if (isset($_POST["updateAccount"])) {
 }
 
 else {
-
-
-
 
   $fnameError =  0;
   $lnameError =  0;
@@ -80,6 +77,7 @@ require 'includes/logout-module.php';
               <form accept-charset="UTF-8" role="form" method="post">
                 <fieldset>
                   <div class="form-group">
+                    <input type="hidden" name="id" value="<?php print($account->getId());?>">
                     <label>Etunimi</label> 
                     <input class="form-control"  name="fname" type="text" value="<?php print(htmlentities($theaccount->getfName(), ENT_QUOTES, "UTF-8"));?>">
 

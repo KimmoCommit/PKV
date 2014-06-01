@@ -38,11 +38,10 @@ class AccountPDO {
 
 
 	function updateAccount($theaccount) {
-		$passwd = sha1($passwd);
+		$pwd = $theaccount->getPasswd();
+		$passwd = sha1($pwd);
 
-
-
-		$sql = "UPDATE account SET fname=:fname, lname=:lname, phone=:phone, email=:email, passwd=:passwd, role=:role";
+		$sql = "UPDATE account SET fname=:fname, lname=:lname, phone=:phone, email=:email, passwd=:passwd, role=:role WHERE id=:id";
 		if (!$stmt = $this->db->prepare($sql)) {
 			$error = $this->db->errorInfo();
 
@@ -52,8 +51,9 @@ class AccountPDO {
 		$stmt->bindValue(":lname", utf8_decode($theaccount->getlName()), PDO::PARAM_STR);
 		$stmt->bindValue(":phone", utf8_decode($theaccount->getPhone()), PDO::PARAM_STR);
 		$stmt->bindValue(":email", utf8_decode($theaccount->getEmail()), PDO::PARAM_STR);
-		$stmt->bindValue(":passwd", utf8_decode($theaccount->getPasswd()), PDO::PARAM_STR);
+		$stmt->bindValue(":passwd", utf8_decode($passwd), PDO::PARAM_STR);
 		$stmt->bindValue(":role", utf8_decode($theaccount->getRole()), PDO::PARAM_STR);
+		$stmt->bindValue(":id", utf8_decode($theaccount->getId()), PDO::PARAM_STR);
 		
 		if(! $stmt->execute()) {
 			$error = $stmt->errorInfo();
@@ -100,6 +100,35 @@ class AccountPDO {
 		}
 		return $result; 
 
+	}
+
+	public function allAccounts() {
+		$sql = "SELECT id, fname, lname, phone, email, role FROM account";
+		
+		if (! $stmt = $this->db->prepare($sql)) {
+			$error = $this->db->errorInfo ();
+			
+			throw new PDOException ($error[2], $error[1]);
+		}
+		
+		if (! $stmt->execute()) {
+			$error = $stmt->errorInfo ();
+			throw new PDOException ($error[2], $error[1]);
+		}
+		
+		$result = array();
+		
+		while ($row = $stmt->fetchObject() ) {
+			$account = new Account();
+			$account->setId($row->id);
+			$account->setfName(utf8_encode($row->fname));
+			$account->setlName(utf8_encode($row->lname));
+			$account->setPhone($row->phone);
+			$account->setEmail(utf8_encode($row->email));
+			$account->setRole(utf8_encode($row->role));
+			$result[] = $account;
+		}
+		return $result;
 	}
 	
 	

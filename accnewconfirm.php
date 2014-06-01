@@ -3,10 +3,9 @@ require_once "account.php";
 session_start();
 
 if(isset($_POST["korjaa"])){
-  header("location: accprofile.php");
+  header("location: accnew.php");
   exit;
 }
-
 
 
 if(isset($_POST["confirm"])){
@@ -25,13 +24,15 @@ if(isset($_POST["confirm"])){
   }
   
   unset($_SESSION["newaccount"]);
-  header("location: confirmed.php");
+  header("location: accnewconfirmed.php");
   exit;
 }
 
 if(isset($_SESSION["newaccount"])){
   $newaccount = $_SESSION["newaccount"];
-} 
+} else {
+  header("location:index.php");
+}
 
 if (isset($_SESSION["account"])){
   $account = $_SESSION["account"];
@@ -83,7 +84,7 @@ require 'head.php';
                   <td>Salasana:</td><td> <?php print($newaccount->getPasswd()); ?></td>
                 </tr>
                 <tr>
-                  <td>Rooli:</td><td> <?php print($newaccount->getRole()); ?></td>
+                  <td>Rooli:</td><td class="role-value"> <?php print($newaccount->getRole()); ?></td>
                 </tr>
               </table><br/>
               <button name="confirm" type="submit" class="btn btn-default  btn-success btn-block">Tallenna</button>
@@ -97,7 +98,13 @@ require 'head.php';
     </div>
   </div>
 </div>
-
+  <script src="js/rolehelper.js" type="text/javascript"></script>
+   <script>
+   $(function(){
+      var rh = new RoleHelper();
+      rh.checkRoleTD();
+   });
+   </script>
 
 </body>
 </html>

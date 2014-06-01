@@ -1,5 +1,5 @@
 <?php 
-header("Refresh: 5; URL=index.php");
+header("Refresh: 5; URL=accmanagement.php");
 ?>
 <?php 
 require 'includes/logout-module.php';
@@ -25,7 +25,7 @@ require 'head.php';
           <div class="panel panel-default login-panel">
             <div class="panel-body">
               <div class="alert alert-success">Käyttäjän luonti onnistui!</div>
-              <p style="font-size:80%">Siirrytään noin viiden (5) sekunnin kuluttua etusivulle..</p>
+              <p style="font-size:80%">Siirrytään noin viiden (5) sekunnin kuluttua takaisin henkiöihin..</p>
             </div>
           </div>
 

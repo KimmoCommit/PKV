@@ -6,9 +6,9 @@
 		<div class="thumbnail">
 			<!--<img data-src="holder.js/300x200" alt="...">-->
 			<div class="caption">
-				<h3 class="text-center">Aloita hyllyttäminen</h3>
+				<h3 class="text-center">Aloita inventointi</h3>
 				<!--<p></p>-->
-				<p><a href="#" class="btn btn-primary btn-lg center-block" role="button">Hyllytä</a>
+				<p><a href="#" class="btn btn-primary btn-lg center-block" role="button">Inventoi</a>
 				</div>
 			</div>
 		</div>

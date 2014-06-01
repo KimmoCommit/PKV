@@ -24,14 +24,14 @@ if(isset($_POST["confirm"])){
     $theaccount = $_SESSION["updateaccount"];
     $usedb = new AccountPDO();
     $usedb->updateAccount($theaccount);
-    $_SESSION["account"] = $theaccount;
+
     
   } catch (Exception $error) {
     print($error->getMessage());
     
 
   }
-  
+  $_SESSION["account"] = $theaccount;
   unset($_SESSION["theaccount"]);
   header("location: accupdatesuccess.php");
   exit;
@@ -68,6 +68,7 @@ require 'head.php';
             <div class="panel-body">
              <form method="post">
               <table class="table-condensed confirm-table">
+                <input type="hidden" name="id" value="<?php print($theaccount->getId); ?>"
                 <tr>
                   <td>Etunimi:</td><td><?php print($theaccount->getfName()); ?> </td>
                 </tr>
@@ -84,7 +85,7 @@ require 'head.php';
                   <td>Salasana:</td><td> <?php print($theaccount->getPasswd()); ?></td>
                 </tr>
                 <tr>
-                  <td>Rooli:</td><td> <?php print($theaccount->getRole()); ?></td>
+                  <td>Rooli:</td><td class="role-value"> <?php print($theaccount->getRole()); ?></td>
                 </tr>
               </table><br/>
               <button name="confirm" type="submit" class="btn btn-default  btn-success btn-block">Tallenna</button>
@@ -99,6 +100,16 @@ require 'head.php';
   </div>
 </div>
 
+
+  <script src="js/rolehelper.js" type="text/javascript"></script>
+   <script>
+   $(function(){
+
+      var rh = new RoleHelper();
+      rh.checkRoleTD();
+
+   });
+   </script>
 
 </body>
 </html>

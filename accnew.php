@@ -29,7 +29,7 @@ if (isset($_POST["createAccount"])) {
 	if($fnameError == 0 && $lnameError == 0 && $phoneError == 0 && $emailError == 0 && $passwdError == 0 && $passwd2Error == 0 && $roleError == 0){
 		$_SESSION["newaccount"] = $newaccount;
 		session_write_close();
-		header("location: confirmaccount.php");
+		header("location: accnewconfirm.php");
 		exit;
 	}
 
@@ -65,105 +65,104 @@ require 'includes/logout-module.php';
 require 'head.php';
 ?>
 <body>
-  <?php 
-  require 'includes/nav.php';
-  ?>
+	<?php 
+	require 'includes/nav.php';
+	?>
 
 
-		<div class="content-container">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-4">
-					</div>
-					<div class="col-md-4">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h3 class="panel-title">Uuden käyttäjätilin tiedot</h3>
-							</div>
-							<div class="panel-body">
-								<form accept-charset="UTF-8" role="form" method="post">
-									<fieldset>
-										<div class="form-group">
-											<label>Etunimi</label> 
-											<input class="form-control"  name="fname" type="text" value="<?php print(htmlentities($newaccount->getfName(), ENT_QUOTES, "UTF-8"));?>">
-
-											<?php
-											print("<div class='custom-alert'>" . $newaccount->getError($fnameError) . "</div>");
-											?> 
-
-										</div>
-										<div class="form-group">
-											<label>Sukunimi</label> 
-											<input class="form-control"  name="lname" type="text" value="<?php print(htmlentities($newaccount->getlName(), ENT_QUOTES, "UTF-8"));?>">
-
-											<?php
-											print("<div class='custom-alert'>" . $newaccount->getError($lnameError) . "</div>");
-											?> 
-
-										</div>
-										<div class="form-group">
-											<label>Puhelinnumero</label> 
-											<input class="form-control"  name="phone" type="text" value="<?php print(htmlentities($newaccount->getPhone(), ENT_QUOTES, "UTF-8"));?>">
-											<?php
-											print("<div class='custom-alert'>" . $newaccount->getError($phoneError) . "</div>");
-											?> 
-										</div>
-										<div class="form-group">
-											<label>Sähköposti</label> 
-											<input class="form-control"  name="email" type="text" value="<?php print(htmlentities($newaccount->getEmail(), ENT_QUOTES, "UTF-8"));?>">
-											<?php
-											print("<div class='custom-alert'>". $newaccount->getError($emailError) . "</div>");
-											?> 
-										</div>
-
-										<div class="form-group">
-											<label>Salasana</label> 
-											<input class="form-control"  name="passwd" type="password" autocomplete="off" value="<?php print(htmlentities($newaccount->getPasswd(), ENT_QUOTES, "UTF-8"));?>">
-											<?php
-											print("<div class='custom-alert'>". $newaccount->getError($passwdError) . "</div>");
-											?> 
-										</div>
-										<div class="form-group">
-											<label>Vahvista salasana</label> 
-											<input class="form-control"  name="passwd2" type="password" autocomplete="off" value="<?php print(htmlentities($newaccount->getPasswd2(), ENT_QUOTES, "UTF-8"));?>">
-											<?php
-											print("<div class='custom-alert'>". $newaccount->getError($passwd2Error) . "</div>");
-											?> 
-										</div>
-
-										<div class="form-group">
-											<label>Rooli</label> 
-											<div class="btn-group btn-group-justified">
-												<div class="btn-group">
-															<button type="button" id="role-button-hallinnoitsija" class="btn btn-default role-button btn-xs " value="0">Hyllyttäjä</button>
-												</div>
-												<div class="btn-group">
-													<button type="button" id="role-button-hallinnoitsija" class="btn btn-default role-button btn-xs " value="1">Hallinnoitsija</button>
-												</div>
-											</div>
-											<input id="role"  class="form-control" name="role" type="hidden" value="<?php if(isset($_SESSION["newaccount"])){print(htmlentities($newaccount->getRole(), ENT_QUOTES, "UTF-8")); }
-											else{print('Hyllyttäjä');}?>">
-											<?php
-											print("<div class='custom-alert'>". $newaccount->getError($roleError) . "</div>");
-											?> 
-										</div>
-									</div> 
-
-									<button class="btn btn-lg btn-success btn-block" type="submit" name="createAccount">Luo tili </button>
-									<button class="btn btn-lg btn-warning btn-block" type="submit" name="empty">Tyhjennä</button>
-
-								</fieldset>
-							</form>
-						</div>
-					</div>
-				</div>
+	<div class="content-container">
+		<div class="container">
+			<div class="row">
 				<div class="col-md-4">
 				</div>
+				<div class="col-md-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Uuden käyttäjätilin tiedot</h3>
+						</div>
+						<div class="panel-body">
+							<form accept-charset="UTF-8" role="form" method="post">
+								<fieldset>
+									<div class="form-group">
+										<label>Etunimi</label> 
+										<input class="form-control"  name="fname" type="text" value="<?php print(htmlentities($newaccount->getfName(), ENT_QUOTES, "UTF-8"));?>">
+										<?php
+										print("<div class='custom-alert'>" . $newaccount->getError($fnameError) . "</div>");
+										?> 
+									</div>
+									<div class="form-group">
+										<label>Sukunimi</label> 
+										<input class="form-control"  name="lname" type="text" value="<?php print(htmlentities($newaccount->getlName(), ENT_QUOTES, "UTF-8"));?>">
+										<?php
+										print("<div class='custom-alert'>" . $newaccount->getError($lnameError) . "</div>");
+										?> 
+									</div>
+									<div class="form-group">
+										<label>Puhelinnumero</label> 
+										<input class="form-control"  name="phone" type="text" value="<?php print(htmlentities($newaccount->getPhone(), ENT_QUOTES, "UTF-8"));?>">
+										<?php
+										print("<div class='custom-alert'>" . $newaccount->getError($phoneError) . "</div>");
+										?> 
+									</div>
+									<div class="form-group">
+										<label>Sähköposti</label> 
+										<input class="form-control"  name="email" type="text" value="<?php print(htmlentities($newaccount->getEmail(), ENT_QUOTES, "UTF-8"));?>">
+										<?php
+										print("<div class='custom-alert'>". $newaccount->getError($emailError) . "</div>");
+										?> 
+									</div>
+
+									<div class="form-group">
+										<label>Salasana</label> 
+										<input class="form-control"  name="passwd" type="password" autocomplete="off" value="<?php print(htmlentities($newaccount->getPasswd(), ENT_QUOTES, "UTF-8"));?>">
+										<?php
+										print("<div class='custom-alert'>". $newaccount->getError($passwdError) . "</div>");
+										?> 
+									</div>
+									<div class="form-group">
+										<label>Vahvista salasana</label> 
+										<input class="form-control"  name="passwd2" type="password" autocomplete="off" value="<?php print(htmlentities($newaccount->getPasswd2(), ENT_QUOTES, "UTF-8"));?>">
+										<?php
+										print("<div class='custom-alert'>". $newaccount->getError($passwd2Error) . "</div>");
+										?> 
+									</div>
+									<div class="form-group">
+										<label>Rooli</label> 
+										<div class="btn-group btn-group-justified">
+											<div class="btn-group">
+												<button type="button" class="role-button-hyllyttaja btn btn-default role-button btn-xs " value="0">Hyllyttäjä</button>
+											</div>
+											<div class="btn-group">
+												<button type="button" class="role-button-hallinnoitsija btn btn-default role-button btn-xs " value="1">Hallinnoitsija</button>
+											</div>
+										</div>
+										<input id="role"  class="form-control" name="role" type="hidden" value="<?php if(isset($_SESSION["newaccount"])){print($newaccount->getRole()); }else{print(0);}?>">
+										<?php
+										print("<div class='custom-alert'>". $newaccount->getError($roleError) . "</div>");
+										?> 
+									</div>
+								</div> 
+								<button class="btn btn-lg btn-success btn-block" type="submit" name="createAccount">Luo tili </button>
+								<button class="btn btn-lg btn-warning btn-block" type="submit" name="empty">Tyhjennä</button>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
 			</div>
 		</div>
 	</div>
+</div>
 
-   <script src="js/roleselection.js"></script>
+<script src="js/rolehelper.js" type="text/javascript"></script>
+<script>
+$(function(){
+	var rh = new RoleHelper();
+	rh.checkRole();
+	rh.selectRole();
+});
+</script>
 
 </body>
 </html>
