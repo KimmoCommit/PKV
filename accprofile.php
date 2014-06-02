@@ -22,7 +22,7 @@ if (isset($_POST["revert"])) {
 }
 
 if (isset($_POST["updateAccount"])) {
-  $updateaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"], $_POST["id"]);
+  $updateaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $account->getRole(), $account->getId());
   $fnameError = $updateaccount->checkfName();
   $lnameError = $updateaccount->checklName();
   $phoneError = $updateaccount->checkPhone();
@@ -75,7 +75,7 @@ else {
               <form accept-charset="UTF-8" role="form" method="post">
                 <fieldset>
                   <div class="form-group">
-                    <input type="hidden" name="id" value="<?php print($account->getId());?>">
+                    <!--<input type="hidden" name="id" value="<?php print($account->getId());?>">-->
                     <label>Etunimi</label> 
                     <input class="form-control"  name="fname" type="text" value="<?php print(htmlentities($theaccount->getfName(), ENT_QUOTES, "UTF-8"));?>">
 
@@ -122,25 +122,11 @@ else {
                     print("<div class='custom-alert'>". $theaccount->getError($passwd2Error) . "</div>");
                     ?> 
                   </div>
+                 <!-- <input id="role"  class="form-control" name="role" type="hidden" value="<?php print($theaccount->getRole()); ?>">-->
 
-                  <?php ?>
-                  <div class="form-group">
-                    <label>Rooli</label> 
-                    <div class="btn-group btn-group-justified">
-                      <div class="btn-group">
-                        <button type="button"  class="role-button-hyllyttaja  btn btn-default role-button btn-xs" value="0">Hyllyttäjä</button>
-                      </div>
-                      <div class="btn-group">
-                       <button type="button" class="role-button-hallinnoitsija  btn btn-default role-button btn-xs" value="1">Hallinnoitsija</button>
-                      </div>
-                    </div>
-                    <input id="role"  class="form-control" name="role" type="hidden" value="<?php print($theaccount->getRole()); ?>">
-                    <?php
-                    print("<div class='custom-alert'>". $theaccount->getError($roleError) . "</div>");
-                    ?> 
-                  </div>
+
                 </div> 
-               <button class="btn btn-lg btn-success btn-block" type="submit" name="updateAccount" >Päivitä</button> 
+                <button class="btn btn-lg btn-success btn-block" type="submit" name="updateAccount" >Päivitä</button> 
                 <button class="btn btn-lg btn-warning btn-block" type="submit" name="revert" >Palauta</button> 
               </fieldset>
             </form>
@@ -153,13 +139,5 @@ else {
   </div>
 </div>
 </div>
-  <script src="js/rolehelper.js" type="text/javascript"></script>
-   <script>
-   $(function(){
-      var rh = new RoleHelper();
-      rh.selectRole();
-      rh.checkRole();
-   });
-   </script>
 </body>
 </html>
