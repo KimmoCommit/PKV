@@ -1,5 +1,5 @@
 <?php
-require_once "account.php";
+require_once "classes/account.php";
 session_start();
 
 if (isset($_SESSION["account"])){
@@ -15,7 +15,7 @@ require 'includes/logout-module.php';
 
 <!DOCTYPE html>
 <html lang="fi">
-<?php require 'head.php'; ?>
+<?php require 'includes/head.php'; ?>
 <body>
   <?php require 'includes/nav.php'; ?>
   <div class="content-container">
@@ -52,7 +52,7 @@ require 'includes/logout-module.php';
             <?php
             try
             {
-             require_once "accountPDO.php";
+             require_once "classes/accountPDO.php";
              $usedb = new accountPDO();
              $result = $usedb->allAccounts();
              foreach($result as $listaccount) {
@@ -75,18 +75,20 @@ require 'includes/logout-module.php';
         </table>
       </div>
 
-      <div class="row">
-        <div class="col-sm-12 col-md-12">
-          <div class="thumbnail">
-            <!--<img data-src="holder.js/300x200" alt="...">-->
-            <div class="caption">
-              <h3 class="text-center">Uuden tilin luonti</h3>
+      <?php if($_SESSION["account"]->getRole() == 1){
+        print("
+      <div class='row'>
+        <div class='col-sm-12 col-md-12'>
+          <div class='thumbnail'>
+            <!--<img data-src='holder.js/300x200' alt='...'>-->
+            <div class='caption'>
+              <h3 class='text-center'>Uuden tilin luonti</h3>
               <!--<p></p>-->
-              <p><a href="accnew.php" class="btn btn-primary btn-lg center-block" role="button">Luo uusi tili</a>
+              <p><a href='accnew.php' class='btn btn-primary btn-lg center-block' role='button'>Luo uusi tili</a>
               </div>
             </div>
           </div>
-        </div>
+        </div> "); } ?>
 
       </div>
         <!--<div class="col-md-4">

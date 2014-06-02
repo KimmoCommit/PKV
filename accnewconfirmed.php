@@ -6,16 +6,9 @@ require 'includes/logout-module.php';
 ?>
 <!DOCTYPE html>
 <html lang="fi">
-<?php 
-require 'head.php';
-?>
+<?php require 'includes/head.php'; ?>
 <body>
-
-  <?php 
-  require 'includes/nav.php';
-  ?>
-
-
+  <?php require 'includes/nav.php'; ?>
   <div class="content-container">
     <div class="container">
       <div class="row">
@@ -28,7 +21,6 @@ require 'head.php';
               <p style="font-size:80%">Siirrytään noin viiden (5) sekunnin kuluttua takaisin henkiöihin..</p>
             </div>
           </div>
-
         </div>
         <div class="col-md-4">
         </div>

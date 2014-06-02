@@ -6,16 +6,9 @@ require 'includes/logout-module.php';
 ?>
 <!DOCTYPE html>
 <html lang="fi">
-<?php 
-require 'head.php';
-?>
+<?php require 'includes/head.php'; ?>
 <body>
-
-  <?php 
-  require 'includes/nav.php';
-  ?>
-
-
+  <?php require 'includes/nav.php'; ?>
   <div class="content-container">
     <div class="container">
       <div class="row">

@@ -1,5 +1,5 @@
 <?php
-require_once "account.php";
+require_once "classes/account.php";
 session_start();
 
 
@@ -53,13 +53,11 @@ else {
 
 ?>
 
-<?php 
-require 'includes/logout-module.php';
-?>
+<?php require 'includes/logout-module.php'; ?>
 
 <!DOCTYPE html>
 <html lang="fi">
-<?php require 'head.php'; ?>
+<?php require 'includes/head.php'; ?>
 <body>
   <?php require 'includes/nav.php'; ?>
 

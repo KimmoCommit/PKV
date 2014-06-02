@@ -1,5 +1,5 @@
 <?php
-require_once "account.php";
+require_once "classes/account.php";
 session_start();
 
 if(isset($_POST["korjaa"])){
@@ -46,15 +46,9 @@ require 'includes/logout-module.php';
 
 <!DOCTYPE html>
 <html lang="fi">
-<?php 
-require 'head.php';
-?>
+<?php require 'includes/head.php'; ?>
 <body>
-
-  <?php 
-  require 'includes/nav.php';
-  ?>
-
+  <?php require 'includes/nav.php'; ?>
   <div class="content-container">
     <div class="container">
       <div class="row">
@@ -98,13 +92,13 @@ require 'head.php';
     </div>
   </div>
 </div>
-  <script src="js/rolehelper.js" type="text/javascript"></script>
-   <script>
-   $(function(){
-      var rh = new RoleHelper();
-      rh.checkRoleTD();
-   });
-   </script>
+<script src="js/rolehelper.js" type="text/javascript"></script>
+<script>
+$(function(){
+  var rh = new RoleHelper();
+  rh.checkRoleTD();
+});
+</script>
 
 </body>
 </html>

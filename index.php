@@ -1,5 +1,5 @@
 <?php
-require_once "account.php";
+require_once "classes/account.php";
 session_start();
 
 if (isset($_SESSION["account"]) && $_SESSION["account"]->getfName() != null){
@@ -9,7 +9,7 @@ if (isset($_SESSION["account"]) && $_SESSION["account"]->getfName() != null){
 if (isset($_POST["login"])) {
   try
   {
-    require_once "accountPDO.php";
+    require_once "classes/accountPDO.php";
     $usedb = new AccountPDO();
     $email = $_POST["email"];
     $passwd = $_POST["passwd"];
@@ -31,14 +31,12 @@ if (isset($_POST["login"])) {
 
 
 ?>
-<?php 
-require 'includes/logout-module.php';
-?>
+<?php require 'includes/logout-module.php'; ?>
 
 
 <!DOCTYPE html>
 <html lang="fi">
-<?php require 'head.php'; ?>
+<?php require 'includes/head.php'; ?>
 <body>
   <?php require 'includes/nav.php'; ?>
 

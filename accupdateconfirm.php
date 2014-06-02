@@ -1,5 +1,5 @@
 <?php
-require_once "account.php";
+require_once "classes/account.php";
 session_start();
 
 
@@ -20,7 +20,7 @@ if(isset($_POST["korjaa"])){
 if(isset($_POST["confirm"])){
   try
   {
-    require_once "accountPDO.php";
+    require_once "classes/accountPDO.php";
     $theaccount = $_SESSION["updateaccount"];
     $usedb = new AccountPDO();
     $usedb->updateAccount($theaccount);
@@ -39,21 +39,15 @@ if(isset($_POST["confirm"])){
 
 
 ?>
-<?php 
-require 'includes/logout-module.php';
-?>
+<?php require 'includes/logout-module.php'; ?>
 
 
 <!DOCTYPE html>
 <html lang="fi">
-<?php 
-require 'head.php';
-?>
+<?php require 'includes/head.php'; ?>
 <body>
 
-  <?php 
-  require 'includes/nav.php';
-  ?>
+  <?php require 'includes/nav.php'; ?>
 
   <div class="content-container">
     <div class="container">

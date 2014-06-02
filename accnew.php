@@ -1,5 +1,5 @@
 <?php 
-require_once "account.php";
+require_once "classes/account.php";
 session_start();
 
 if (isset($_SESSION["account"]) && $_SESSION["account"]->getRole() == '1'){
@@ -61,13 +61,9 @@ require 'includes/logout-module.php';
 
 <!DOCTYPE html>
 <html lang="fi">
-<?php 
-require 'head.php';
-?>
+<?php require 'includes/head.php'; ?>
 <body>
-	<?php 
-	require 'includes/nav.php';
-	?>
+	<?php require 'includes/nav.php'; ?>
 
 
 	<div class="content-container">
