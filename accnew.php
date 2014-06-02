@@ -16,6 +16,13 @@ if (isset($_POST["empty"])) {
 	exit;
 }
 
+
+if (isset($_POST["back"])) {
+	unset($_SESSION["newaccount"]);
+	header("location: accmanagement.php");
+	exit;
+}
+
 if (isset($_POST["createAccount"])) {
 	$newaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"]);
 	$fnameError = $newaccount->checkfName();
@@ -140,6 +147,7 @@ require 'includes/logout-module.php';
 								</div> 
 								<button class="btn btn-lg btn-success btn-block" type="submit" name="createAccount">Luo tili </button>
 								<button class="btn btn-lg btn-warning btn-block" type="submit" name="empty">Tyhjennä</button>
+								<button class="btn btn-lg btn-block" type="submit" name="back">Takaisin</button>
 							</fieldset>
 						</form>
 					</div>

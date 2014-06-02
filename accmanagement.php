@@ -67,14 +67,17 @@ require 'includes/logout-module.php';
           <h1 style="padding-bottom:2%;">Henkilöt</h1>
           <div class="row" style="padding-bottom:2%;">
             <div class="col-md-3">
-             <form class="" role="search">
+             <form method="post" role="search">
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="">
+                <input type="text" class="form-control" placeholder="" name="searchfield">
               </div>
-              <button type="submit" class="btn btn-default btn-sm">Hae</button>
+              <button type="submit" class="btn btn-default btn-sm" name="search" id="search">Hae</button>
+
             </form>
           </div>
         </div>
+
+        
         <div class="table-responsive ">
           <table class="table table-condensed table-hover">
 
@@ -88,40 +91,101 @@ require 'includes/logout-module.php';
               <th></th>
             </thead>
 
-            <?php
-            if($account->getRole() == 1){
-              try
-              {
-               require_once "classes/accountPDO.php";
-               $usedb = new accountPDO();
-               $result = $usedb->allAccounts();
 
-               foreach($result as $listaccount) {
-                print("
-                  <form method='post'>
-                  <input type='hidden' name='id' value='". $listaccount->getId() . "''>
-                  <tr>
-                  <td>". $listaccount->getfName() ."</td>
-                  <input name='fname' type='hidden' value='". $listaccount->getfName() ."'>
-                  <td>". $listaccount->getlName() ."</td>
-                  <input name='lname' type='hidden' value='". $listaccount->getlName() ."'>
-                  <td><a href='tel:". $listaccount->getPhone() ."'>". $listaccount->getPhone() ."</a></td>
-                  <input name='phone' type='hidden' value='". $listaccount->getPhone() ."'>
-                  <td><a href='mailto:". $listaccount->getEmail() . "?Subject=[SKLV] ". $account->getfName() ." tässä hei!' target=_'top'>". $listaccount->getEmail() ."</a></td>
-                  <input name='email' type='hidden' value='". $listaccount->getEmail() ."'>
-                  <td class='role-value'>". $listaccount->getRole() ."</td>
-                  <input name='role' type='hidden' value='". $listaccount->getRole() ."'>
-                  <input name='passwd' type='hidden' value=''>
-                  <input name='passwd2' type='hidden' value=''>
-                  <td><button class='btn btn-warning btn-xs' type='submit' name='editAccount'>Muokkaa</td>
-                  <td><button class='btn btn-danger btn-xs' type='submit' name='deleteAccount'>Poista</td>
-                  </tr>
-                  </form>");
+
+            <?php
+            if (isset($_POST["search"]) && $account->getRole() == 1) {
+              try {
+                require_once "classes/accountPDO.php";
+                $usedb = new AccountPDO();
+                $result = $usedb->findAccounts($_POST["searchfield"]);
+                if(count($result) == 0 ){
+                  print("
+                    <h3> Yhtään hakutulosta ei löytynyt </h3>
+                    ");
+                }
+
+                else if($_POST["searchfield"] == ""){
+                  header("location: accmanagement.php");
+                }
+                else {
+                  print("<h3>Hakutulokset haulle: " . $_POST["searchfield"] . "</h3>");
+                  foreach($result as $listaccount) {
+                    print("
+                      <form method='post'>
+                      <input type='hidden' name='id' value='". $listaccount->getId() . "''>
+                      <tr>
+                      <td>". $listaccount->getfName() ."</td>
+                      <input name='fname' type='hidden' value='". $listaccount->getfName() ."'>
+                      <td>". $listaccount->getlName() ."</td>
+                      <input name='lname' type='hidden' value='". $listaccount->getlName() ."'>
+                      <td><a href='tel:". $listaccount->getPhone() ."'>". $listaccount->getPhone() ."</a></td>
+                      <input name='phone' type='hidden' value='". $listaccount->getPhone() ."'>
+                      <td><a href='mailto:". $listaccount->getEmail() . "?Subject=[SKLV] ". $account->getfName() ." tässä hei!' target=_'top'>". $listaccount->getEmail() ."</a></td>
+                      <input name='email' type='hidden' value='". $listaccount->getEmail() ."'>
+                      <td class='role-value'>". $listaccount->getRole() ."</td>
+                      <input name='role' type='hidden' value='". $listaccount->getRole() ."'>
+                      <input name='passwd' type='hidden' value=''>
+                      <input name='passwd2' type='hidden' value=''>
+                      <td><button class='btn btn-warning btn-xs' type='submit' name='editAccount'>Muokkaa</td>
+                      <td><button class='btn btn-danger btn-xs' type='submit' name='deleteAccount'>Poista</td>
+                      </tr>
+                      </form>
+                      ");
+}
+}
+
+}
+catch (Exception $error){
+  print($error->getMessage());
+
+}
+}
+
+
+
+?>
+
+
+
+
+
+
+<?php
+if($account->getRole() == 1 && isset($_POST["search"]) == false){
+  try
+  {
+   require_once "classes/accountPDO.php";
+   $usedb = new accountPDO();
+   $result = $usedb->allAccounts();
+
+   foreach($result as $listaccount) {
+    print("
+      <form method='post'>
+      <input type='hidden' name='id' value='". $listaccount->getId() . "''>
+      <tr>
+      <td>". $listaccount->getfName() ."</td>
+      <input name='fname' type='hidden' value='". $listaccount->getfName() ."'>
+      <td>". $listaccount->getlName() ."</td>
+      <input name='lname' type='hidden' value='". $listaccount->getlName() ."'>
+      <td><a href='tel:". $listaccount->getPhone() ."'>". $listaccount->getPhone() ."</a></td>
+      <input name='phone' type='hidden' value='". $listaccount->getPhone() ."'>
+      <td><a href='mailto:". $listaccount->getEmail() . "?Subject=[SKLV] ". $account->getfName() ." tässä hei!' target=_'top'>". $listaccount->getEmail() ."</a></td>
+      <input name='email' type='hidden' value='". $listaccount->getEmail() ."'>
+      <td class='role-value'>". $listaccount->getRole() ."</td>
+      <input name='role' type='hidden' value='". $listaccount->getRole() ."'>
+      <input name='passwd' type='hidden' value=''>
+      <input name='passwd2' type='hidden' value=''>
+      <td><button class='btn btn-warning btn-xs' type='submit' name='editAccount'>Muokkaa</td>
+      <td><button class='btn btn-danger btn-xs' type='submit' name='deleteAccount'>Poista</td>
+      </tr>
+      </form>
+      ");
 }
 } catch (Exception $error) {
   print($error->getMessage());
 }
-} else {
+} else if(isset($_POST["search"]) == false){
 
   try
   {
@@ -131,6 +195,7 @@ require 'includes/logout-module.php';
 
    foreach($result as $listaccount) {
     print("
+      <div class='list-container'>
       <tr>
       <td>". $listaccount->getfName() ."</td>
       <td>". $listaccount->getlName() ."</td>
@@ -139,7 +204,8 @@ require 'includes/logout-module.php';
       <td class='role-value'>". $listaccount->getRole() ."</td>
       <td></td>
       <td></td>
-      </tr>");
+      </tr>
+      </div>");
   }
 } catch (Exception $error) {
   print($error->getMessage());
@@ -172,6 +238,7 @@ require 'includes/logout-module.php';
     </div>
   </div>
 </div>
+
 <script src="js/rolehelper.js" type="text/javascript"></script>
 <script>
 $(function(){
@@ -181,6 +248,9 @@ $(function(){
 
 });
 </script>
+
+
+
 
 </body>
 </html>
