@@ -3,37 +3,36 @@ require_once "classes/account.php";
 session_start();
 
 
-if(isset($_SESSION["updateaccount"])){
-  $theaccount = $_SESSION["updateaccount"];
-} 
-
-if (isset($_SESSION["account"])){
+if (isset($_SESSION["account"]) && isset($_SESSION["deleteaccount"])){
   $account = $_SESSION["account"];
-}
-
-
-if(isset($_POST["fix"])){
-  header("location: accprofile.php");
+  $theaccount = $_SESSION["deleteaccount"];
+} else {
+  header("location: index.php");
   exit;
 }
 
-if(isset($_POST["confirm"])){
+
+if(isset($_POST["back"])){
+  unset($_SESSION["deleteaccount"]);
+  header("location: accmanagement.php");
+  exit;
+}
+
+if (isset($_POST["confirm"])){
   try
   {
     require_once "classes/accountPDO.php";
-    $theaccount = $_SESSION["updateaccount"];
-    $usedb = new AccountPDO();
-    $usedb->updateAccount($theaccount);
 
-    
+    $usedb = new AccountPDO();
+    $id = $theaccount->getId();
+    $usedb->deleteAccount($id);
+  
   } catch (Exception $error) {
     print($error->getMessage());
-    
-
   }
-  $_SESSION["account"] = $theaccount;
-  unset($_SESSION["theaccount"]);
-  header("location: accupdatesuccess.php");
+
+  unset($_SESSION["deleteaccount"]);
+  header("location: accdeletesuccess.php");
   exit;
 }
 
@@ -57,12 +56,12 @@ if(isset($_POST["confirm"])){
         <div class="col-md-4">
           <div class="panel panel-default login-panel">
             <div class="panel-heading">
-              <h3 class="panel-title">Tietojen varmistaminen</h3>
+              <h3 class="panel-title">Poiston varmistaminen</h3>
             </div>
             <div class="panel-body">
              <form method="post">
               <table class="table-condensed confirm-table">
-                <input type="hidden" name="id" value="<?php print($theaccount->getId); ?>">
+                <input type="hidden" name="id" value="<?php print($theaccount->getId); ?>"
                 <tr>
                   <td>Etunimi:</td><td><?php print($theaccount->getfName()); ?> </td>
                 </tr>
@@ -76,14 +75,11 @@ if(isset($_POST["confirm"])){
                   <td>Sähköposti:</td><td><?php print($theaccount->getEmail()); ?></td>
                 </tr>
                 <tr>
-                  <td>Salasana:</td><td> <?php print($theaccount->getPasswd()); ?></td>
-                </tr>
-                <tr>
                   <td>Rooli:</td><td class="role-value"> <?php print($theaccount->getRole()); ?></td>
                 </tr>
               </table><br/>
-              <button name="confirm" type="submit" class="btn btn-default  btn-success btn-block">Tallenna</button>
-              <button name="fix" type="submit" class="btn btn-default  btn-warning btn-block">Korjaa</button> 
+              <button name="confirm" type="submit" class="btn btn-default  btn-danger btn-block">Poista</button>
+              <button name="back" type="submit" class="btn btn-default  btn-block">Takaisin</button> 
             </form>
           </div>
         </div>
@@ -95,15 +91,15 @@ if(isset($_POST["confirm"])){
 </div>
 
 
-  <script src="js/rolehelper.js" type="text/javascript"></script>
-   <script>
-   $(function(){
+<script src="js/rolehelper.js" type="text/javascript"></script>
+<script>
+$(function(){
 
-      var rh = new RoleHelper();
-      rh.checkRoleTD();
+  var rh = new RoleHelper();
+  rh.checkRoleTD();
 
-   });
-   </script>
+});
+</script>
 
 </body>
 </html>

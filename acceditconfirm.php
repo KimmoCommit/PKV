@@ -2,53 +2,52 @@
 require_once "classes/account.php";
 session_start();
 
-if(isset($_POST["korjaa"])){
-  header("location: accnew.php");
+
+if (isset($_SESSION["account"]) && isset($_SESSION["editaccount"])){
+  $account = $_SESSION["account"];
+  $theaccount = $_SESSION["editaccount"];
+} else {
+  header("location: index.php");
   exit;
 }
 
+
+if(isset($_POST["fix"])){
+  header("location: accedit.php");
+  exit;
+}
 
 if(isset($_POST["confirm"])){
   try
   {
     require_once "classes/accountPDO.php";
-    $newaccount = $_SESSION["newaccount"];
+    $theaccount = $_SESSION["editaccount"];
     $usedb = new AccountPDO();
-    $id = $usedb->addAccount($newaccount);
-    $newaccount->setId($id);
+    $usedb->updateAccount($theaccount);
+
     
   } catch (Exception $error) {
     print($error->getMessage());
     
 
   }
-  
-  unset($_SESSION["newaccount"]);
-  header("location: accnewconfirmed.php");
+  unset($_SESSION["editaccount"]);
+  header("location: acceditsuccess.php");
   exit;
 }
 
-if(isset($_SESSION["newaccount"])){
-  $newaccount = $_SESSION["newaccount"];
-} else {
-  header("location:index.php");
-}
-
-if (isset($_SESSION["account"])){
-  $account = $_SESSION["account"];
-}
 
 ?>
-<?php 
-require 'includes/logout-module.php';
-?>
+<?php require 'includes/logout-module.php'; ?>
 
 
 <!DOCTYPE html>
 <html lang="fi">
 <?php require 'includes/head.php'; ?>
 <body>
+
   <?php require 'includes/nav.php'; ?>
+
   <div class="content-container">
     <div class="container">
       <div class="row">
@@ -62,27 +61,28 @@ require 'includes/logout-module.php';
             <div class="panel-body">
              <form method="post">
               <table class="table-condensed confirm-table">
+                <input type="hidden" name="id" value="<?php print($theaccount->getId); ?>"
                 <tr>
-                  <td>Etunimi:</td><td><?php print($newaccount->getfName()); ?> </td>
+                  <td>Etunimi:</td><td><?php print($theaccount->getfName()); ?> </td>
                 </tr>
                 <tr>
-                  <td>Sukunimi:</td><td><?php print($newaccount->getlName()); ?> </td>
+                  <td>Sukunimi:</td><td><?php print($theaccount->getlName()); ?> </td>
                 </tr>
                 <tr>
-                  <td>Puhelinnumero:</td><td><?php print($newaccount->getPhone()); ?> </td>
+                  <td>Puhelinnumero:</td><td><?php print($theaccount->getPhone()); ?> </td>
                 </tr>
                 <tr>
-                  <td>Sähköposti:</td><td><?php print($newaccount->getEmail()); ?></td>
+                  <td>Sähköposti:</td><td><?php print($theaccount->getEmail()); ?></td>
                 </tr>
                 <tr>
-                  <td>Salasana:</td><td> <?php print($newaccount->getPasswd()); ?></td>
+                  <td>Salasana:</td><td> <?php print($theaccount->getPasswd()); ?></td>
                 </tr>
                 <tr>
-                  <td>Rooli:</td><td class="role-value"> <?php print($newaccount->getRole()); ?></td>
+                  <td>Rooli:</td><td class="role-value"> <?php print($theaccount->getRole()); ?></td>
                 </tr>
               </table><br/>
               <button name="confirm" type="submit" class="btn btn-default  btn-success btn-block">Tallenna</button>
-              <button name="korjaa" type="submit" class="btn btn-default  btn-warning btn-block">Korjaa</button> 
+              <button name="fix" type="submit" class="btn btn-default  btn-warning btn-block">Korjaa</button> 
             </form>
           </div>
         </div>
@@ -92,11 +92,15 @@ require 'includes/logout-module.php';
     </div>
   </div>
 </div>
+
+
 <script src="js/rolehelper.js" type="text/javascript"></script>
 <script>
 $(function(){
+
   var rh = new RoleHelper();
   rh.checkRoleTD();
+
 });
 </script>
 

@@ -1,5 +1,5 @@
 <?php 
-header("Refresh: 3; URL=index.php");
+header("Refresh: 3; URL=accmanagement.php");
 ?>
 <?php 
 include 'includes/logout-module.php';
@@ -18,7 +18,7 @@ include 'includes/logout-module.php';
           <div class="panel panel-default login-panel">
             <div class="panel-body">
               <div class="alert alert-success">Käyttäjän päivitys onnistui!</div>
-              <p style="font-size:80%">Siirrytään noin viiden (3) sekunnin kuluttua etusivulle..</p>
+              <p style="font-size:80%">Siirrytään noin viiden (3) sekunnin kuluttua takaisin henkiöihin..</p>
             </div>
           </div>
 
