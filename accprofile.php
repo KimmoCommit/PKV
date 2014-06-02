@@ -16,7 +16,7 @@ if(isset($_SESSION["updateaccount"])){
 }
 
 if (isset($_POST["revert"])) {
-  unset($_SESSION["theaccount"]);
+  unset($_SESSION["updateaccount"]);
   header("location: accprofile.php");
   exit;
 }
