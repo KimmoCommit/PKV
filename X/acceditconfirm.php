@@ -32,7 +32,8 @@ if(isset($_POST["confirm"])){
 
   }
   unset($_SESSION["editaccount"]);
-  header("location: acceditsuccess.php");
+  $_SESSION["editsuccess"] = "editsuccess";
+  header("location: messagesuccess.php");
   exit;
 }
 

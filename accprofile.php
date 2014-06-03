@@ -34,7 +34,7 @@ if (isset($_POST["updateAccount"])) {
   if($fnameError == 0 && $lnameError == 0 && $phoneError == 0 && $emailError == 0 && $passwdError == 0 && $passwd2Error == 0 && $roleError == 0){
     $_SESSION["updateaccount"] = $updateaccount;
     session_write_close();
-    header("location: accupdateconfirm.php");
+    header("location: accconfirm.php");
     exit;
   }
 

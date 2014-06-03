@@ -33,7 +33,8 @@ if(isset($_POST["confirm"])){
   }
   $_SESSION["account"] = $theaccount;
   unset($_SESSION["theaccount"]);
-  header("location: accupdatesuccess.php");
+  $_SESSION["updatesuccess"] = "updatesuccess";
+  header("location: messagesuccess.php");
   exit;
 }
 

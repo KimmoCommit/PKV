@@ -159,7 +159,7 @@ class AccountPDO {
 
 	public function findAccounts($search){
 		$sql = "SELECT id, fname, lname, phone, email, role FROM account 
-		WHERE (CONCAT_WS(fname, lname, phone, email, role) LIKE :search);";
+		WHERE (CONCAT_WS(fname, lname, phone, email, role) LIKE :search) ORDER BY fname ASC ;";
 
 		if (! $stmt = $this->db->prepare($sql)) {
 			$error = $this->db->errorInfo ();

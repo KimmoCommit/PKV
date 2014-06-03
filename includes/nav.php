@@ -1,6 +1,5 @@
   <nav class="navbar navbar-default" role="navigation">
     <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navi">
           <span class="sr-only">Toggle navigation</span>
@@ -16,10 +15,6 @@
        <?php if(isset($_SESSION["account"])){
         include 'includes/nav-links-normal.php';
       } ?>
-<!--
-      <?php if(isset($_SESSION["account"]) && $_SESSION["account"]->getRole() == '1'){
-        include 'includes/nav-links-admin.php';
-      } ?> -->
 
       
 

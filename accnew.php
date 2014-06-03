@@ -4,61 +4,58 @@ session_start();
 
 if (isset($_SESSION["account"]) && $_SESSION["account"]->getRole() == '1'){
 	$account = $_SESSION["account"];
+
+	if (isset($_POST["empty"])) {
+		unset($_SESSION["newaccount"]);
+		header("location: accnew.php");
+		exit;
+	}
+
+	if (isset($_POST["back"])) {
+		unset($_SESSION["newaccount"]);
+		header("location: accmanagement.php");
+		exit;
+	}
+
+	if (isset($_POST["createAccount"])) {
+		$newaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"]);
+		$fnameError = $newaccount->checkfName();
+		$lnameError = $newaccount->checklName();
+		$phoneError = $newaccount->checkPhone();
+		$emailError = $newaccount->checkEmail();
+		$passwdError = $newaccount->checkPasswd();
+		$passwd2Error = $newaccount->checkPasswd2();
+		$roleError = $newaccount->checkRole();
+
+		if($fnameError == 0 && $lnameError == 0 && $phoneError == 0 && $emailError == 0 && $passwdError == 0 && $passwd2Error == 0 && $roleError == 0){
+			$_SESSION["newaccount"] = $newaccount;
+			session_write_close();
+			header("location: accconfirm.php");
+			exit;
+		}
+
+	}
+
+	else {
+
+		if(isset($_SESSION["newaccount"])){
+			$newaccount = $_SESSION["newaccount"];
+		} else {
+			$newaccount = new Account();
+
+		}
+		$fnameError =  0;
+		$lnameError =  0;
+		$phoneError = 0;
+		$emailError = 0;
+		$passwdError = 0;
+		$passwd2Error = 0;
+		$roleError = 0;
+	}
 } else {
 	header('location:index.php');
 	exit;
 }
-
-
-if (isset($_POST["empty"])) {
-	unset($_SESSION["newaccount"]);
-	header("location: accnew.php");
-	exit;
-}
-
-
-if (isset($_POST["back"])) {
-	unset($_SESSION["newaccount"]);
-	header("location: accmanagement.php");
-	exit;
-}
-
-if (isset($_POST["createAccount"])) {
-	$newaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"]);
-	$fnameError = $newaccount->checkfName();
-	$lnameError = $newaccount->checklName();
-	$phoneError = $newaccount->checkPhone();
-	$emailError = $newaccount->checkEmail();
-	$passwdError = $newaccount->checkPasswd();
-	$passwd2Error = $newaccount->checkPasswd2();
-	$roleError = $newaccount->checkRole();
-
-	if($fnameError == 0 && $lnameError == 0 && $phoneError == 0 && $emailError == 0 && $passwdError == 0 && $passwd2Error == 0 && $roleError == 0){
-		$_SESSION["newaccount"] = $newaccount;
-		session_write_close();
-		header("location: accnewconfirm.php");
-		exit;
-	}
-
-}
-
-else {
-
-	if(isset($_SESSION["newaccount"])){
-		$newaccount = $_SESSION["newaccount"];
-	} else {
-		$newaccount = new Account();
-
-	}
-	$fnameError =  0;
-	$lnameError =  0;
-	$phoneError = 0;
-	$emailError = 0;
-	$passwdError = 0;
-	$passwd2Error = 0;
-	$roleError = 0;
-}
-
 
 
 ?>

@@ -2,57 +2,66 @@
 require_once "classes/account.php";
 session_start();
 
-
-if (isset($_SESSION["account"]) && isset($_SESSION["editaccount"]) && $_SESSION["account"]->getRole() == 1){
+if (isset($_SESSION["account"]) && $_SESSION["account"]->getRole() == 1){
   $account = $_SESSION["account"];
-  $theaccount = $_SESSION["editaccount"];
+
+  if(isset($_POST["editAccount"])){
+    $editaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"], $_POST["id"]);
+    $theaccount = $editaccount;
+    $fnameError = 0;
+    $lnameError = 0;
+    $phoneError = 0;
+    $emailError = 0;
+    $passwdError = 0;
+    $passwd2Error = 0;
+    $roleError = 0;
+  }
+
+  if(isset($_SESSION["editAccount"])){
+    $theaccount = $_SESSION["editAccount"];
+
+    $fnameError = 0;
+    $lnameError = 0;
+    $phoneError = 0;
+    $emailError = 0;
+    $passwdError = 0;
+    $passwd2Error = 0;
+    $roleError = 0;
+  }
+
+ 
+
+  if (isset($_POST["editTheAccount"])){
+    $editaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"], $_POST["id"]);
+    $theaccount = $editaccount;
+    
+    $fnameError = $theaccount->checkfName();
+    $lnameError = $theaccount->checklName();
+    $phoneError = $theaccount->checkPhone();
+    $emailError = $theaccount->checkEmail();
+    $passwdError = $theaccount->checkPasswd();
+    $passwd2Error = $theaccount->checkPasswd2();
+    $roleError = $theaccount->checkRole();
+
+    if($fnameError == 0 && $lnameError == 0 && $phoneError == 0 && $emailError == 0 && $passwdError == 0 && $passwd2Error == 0 && $roleError == 0){
+      $_SESSION["editAccount"] = $theaccount;
+      session_write_close();
+      header("location: accconfirm.php");
+      exit;
+    }
+
+  }
+
+  if (isset($_POST["back"])) {
+    header("location: accmanagement.php");
+    exit;
+  }
+
 } else {
   header("location: index.php");
   exit;
 }
 
-
-if (isset($_POST["revert"])) {
-  $theaccount = $_SESSION["editaccount"];
-  header("location: accedit.php");
-  exit;
-}
-
-if (isset($_POST["back"])) {
-  unset($_SESSION["editaccount"]);
-  header("location: accmanagement.php");
-  exit;
-}
-
-if (isset($_POST["editAccount"])) {
-  $editaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"], $_POST["id"]);
-  $fnameError = $editaccount->checkfName();
-  $lnameError = $editaccount->checklName();
-  $phoneError = $editaccount->checkPhone();
-  $emailError = $editaccount->checkEmail();
-  $passwdError = $editaccount->checkPasswd();
-  $passwd2Error = $editaccount->checkPasswd2();
-  $roleError = $editaccount->checkRole();
-
-  if($fnameError == 0 && $lnameError == 0 && $phoneError == 0 && $emailError == 0 && $passwdError == 0 && $passwd2Error == 0 && $roleError == 0){
-    $_SESSION["editaccount"] = $editaccount;
-    session_write_close();
-    header("location: acceditconfirm.php");
-    exit;
-  }
-
-}
-
-else {
-
-  $fnameError =  0;
-  $lnameError =  0;
-  $phoneError = 0;
-  $emailError = 0;
-  $passwdError = 0;
-  $passwd2Error = 0;
-  $roleError = 0;
-}
 
 ?>
 
@@ -75,7 +84,7 @@ else {
               <h3 class="panel-title">Profiilin muokkaus</h3>
             </div>
             <div class="panel-body">
-              <form accept-charset="UTF-8" role="form" method="post">
+              <form accept-charset="UTF-8" role="form" method="post"  action="">
                 <fieldset>
                   <div class="form-group">
                     <input type="hidden" name="id" value="<?php print($theaccount->getId());?>">
@@ -143,9 +152,8 @@ else {
                    ?> 
                  </div>
                </div> 
-               <button class="btn btn-lg btn-success btn-block" type="submit" name="editAccount" >Muokkaa</button> 
-               <button class="btn btn-lg  btn-warning btn-block" type="submit" name="revert" >Palauta</button>
-               <button class="btn btn-lg   btn-block" type="submit" name="back" >Takaisin</button> 
+               <button class="btn btn-lg btn-success btn-block" type="submit" name="editTheAccount" >Muokkaa</button> 
+               <button class="btn btn-lg  btn-block" type="submit" name="back" >Takaisin</button> 
              </fieldset>
            </form>
          </div>
