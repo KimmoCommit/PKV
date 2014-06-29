@@ -1,59 +1,82 @@
 <?php 
-require_once "classes/account.php";
-session_start();
+require_once 'core/init.php';
+$message = new Message();	
 
-if (isset($_SESSION["account"]) && $_SESSION["account"]->getRole() == '1'){
+if (isset($_SESSION["account"]) && $_SESSION["account"]->getRole() == 1){
+	$newaccount = new Account();
+	$fnameError = 0;
+	$lnameError = 0;
+	$phoneError = 0;
+	$emailError = 0;
+	$passwdError = 0;
+	$passwd2Error = 0;
+	$roleError = 0;
 	$account = $_SESSION["account"];
+} else {
+	header("location index.php");
+	exit;
+}
 
-	if (isset($_POST["empty"])) {
-		unset($_SESSION["newaccount"]);
-		header("location: accnew.php");
-		exit;
+if (isset($_POST["createAccount"])) {	
+
+	$newaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"]);
+	$fnameError = $newaccount->checkfName();
+	$lnameError = $newaccount->checklName();
+	$phoneError = $newaccount->checkPhone();
+	$emailError = $newaccount->checkEmail();
+	$passwdError = $newaccount->checkPasswd();
+	$passwd2Error = $newaccount->checkPasswd2();
+	$roleError = $newaccount->checkRole();
+
+	try
+	{
+		$usedb = new AccountPDO();
+		$email = $_POST["email"];
+		$result = $usedb->findEmail($email);
+
+	} catch (Exception $error) {
+		print($error->getMessage());
 	}
 
-	if (isset($_POST["back"])) {
-		unset($_SESSION["newaccount"]);
-		header("location: accmanagement.php");
-		exit;
-	}
-
-	if (isset($_POST["createAccount"])) {
-		$newaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"]);
-		$fnameError = $newaccount->checkfName();
-		$lnameError = $newaccount->checklName();
-		$phoneError = $newaccount->checkPhone();
-		$emailError = $newaccount->checkEmail();
-		$passwdError = $newaccount->checkPasswd();
-		$passwd2Error = $newaccount->checkPasswd2();
-		$roleError = $newaccount->checkRole();
+	if( $result != null ){
+		$message->setMessageBody("Käyttäjätunnus tällä sähköpostilla löytyy järjestelmästä");
+	} else {
 
 		if($fnameError == 0 && $lnameError == 0 && $phoneError == 0 && $emailError == 0 && $passwdError == 0 && $passwd2Error == 0 && $roleError == 0){
-			$_SESSION["newaccount"] = $newaccount;
+			try
+			{
+				$usedb = new AccountPDO();
+				$id = $usedb->addAccount($newaccount);
+				$newaccount->setId($id);
+
+			} catch (Exception $error) {
+				print($error->getMessage());
+			}
+			$message = new Message();
+			$messagetitle = "Uuden käyttäjän luonti onnistui!";
+			$messagebody = "Siirrytään takaisin henkilöihin noin kolmen (3) sekunnin kuluttua..";
+			$message->setMessageTitle($messagetitle);
+			$message->setMessageBody($messagebody);
+
+			$_SESSION["createAccount"] = $message;
 			session_write_close();
-			header("location: accconfirm.php");
+			header("location: message.php");
 			exit;
 		}
 
 	}
 
-	else {
+}
 
-		if(isset($_SESSION["newaccount"])){
-			$newaccount = $_SESSION["newaccount"];
-		} else {
-			$newaccount = new Account();
+if (isset($_POST["empty"])) {
+	unset($_SESSION["newaccount"]);
+	header("location: accnew.php");
+	exit;
+}
 
-		}
-		$fnameError =  0;
-		$lnameError =  0;
-		$phoneError = 0;
-		$emailError = 0;
-		$passwdError = 0;
-		$passwd2Error = 0;
-		$roleError = 0;
-	}
-} else {
-	header('location:index.php');
+if (isset($_POST["back"])) {
+	unset($_SESSION["newaccount"]);
+	header("location: accmanagement.php");
 	exit;
 }
 
@@ -110,6 +133,11 @@ require 'includes/logout-module.php';
 										<?php
 										print("<div class='custom-alert'>". $newaccount->getError($emailError) . "</div>");
 										?> 
+										<?php
+										if (isset($_POST["createAccount"])){
+											print("<div class='custom-alert'>". $message->getMessageBody() . "</div>");
+										}
+										?> 
 									</div>
 
 									<div class="form-group">
@@ -142,10 +170,30 @@ require 'includes/logout-module.php';
 										?> 
 									</div>
 								</div> 
-								<button class="btn btn-lg btn-success btn-block" type="submit" name="createAccount">Luo tili </button>
+								<button class="btn btn-lg btn-success btn-block" type="button"  data-toggle="modal" data-target="#createAccount">Luo tili </button>
 								<button class="btn btn-lg btn-warning btn-block" type="submit" name="empty">Tyhjennä</button>
 								<button class="btn btn-lg btn-block" type="submit" name="back">Takaisin</button>
 							</fieldset>
+
+
+							<div class='modal fade' id="createAccount" tabindex='-1' role='dialog' aria-labelledby='accCreateLabel' aria-hidden='true'>
+								<div class='modal-dialog'>
+									<div class='modal-content'>
+										<div class='modal-header'>
+											<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+											<h4 class='modal-title' id='accCreateLabel'>Vahvista tilin luonti</h4>
+										</div>
+										<div class='modal-body'>
+											Vahvistetaanko tilin luonti?
+										</div>
+										<div class='modal-footer'>
+											<button type='button' class='btn btn-default ' data-dismiss='modal' style="margin-bottom:5px;">Peruuta</button>
+											<button class='btn btn-success' type='submit' name="createAccount" style="margin-bottom:5px;">Vahvista</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
 						</form>
 					</div>
 				</div>

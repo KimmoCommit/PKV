@@ -1,15 +1,18 @@
 <?php
-require_once "account.php";
 
 class AccountPDO {
 	private $db;
-	function __construct($dsn="mysql:host=localhost;dbname=SKLV", $user="root", $password="salainen") {
-		$this->db = new PDO($dsn,$user,$password);
-		$this->db->setAttribute (PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-		$this->db->setAttribute (PDO::ATTR_EMULATE_PREPARES, false);
+
+	function __construct() {
+		if (DB::getInstance() === null ){
+			$this->db = new PDO('mysql:host=' . Config::get('mysql/host') .';dbname=' . Config::get('mysql/db'), Config::get('mysql/username'), Config::get('mysql/password'));
+		}
+
+		$this->db = DB::getInstance()->pdo;		
 	}
 
 	function addAccount($newaccount) {
+
 		$sql = "INSERT INTO account (fname, lname, phone, email, passwd, role)
 		values (:fname, :lname, :phone, :email, SHA1(:passwd), :role)";
 		if (!$stmt = $this->db->prepare($sql)) {
@@ -189,6 +192,30 @@ class AccountPDO {
 		}
 		return $result;
 
+	}
+
+	public function findEmail($email){
+		$sql = "SELECT email FROM account WHERE email = :email";
+
+		if (!$stmt = $this->db->prepare($sql)) {
+			$error = $this->db->errorInfo();
+			throw new PDOException ($error[2], $error[1]);
+		}
+
+		$stmt->bindValue(":email", $email, PDO::PARAM_STR);
+		
+		if (! $stmt->execute()) {
+			$error = $stmt->errorInfo ();
+			throw new PDOException ($error[2], $error[1]);
+		}
+		
+
+		while ($row = $stmt->fetchObject() ) {
+			$result = new Account();
+			$result->setEmail(utf8_encode($row->email));
+		}
+
+		return $result; 
 	}
 
 }

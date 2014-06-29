@@ -1,76 +1,71 @@
 <?php
-require_once 'core/init.php';
+require_once "classes/account.php";
+session_start();
 
-$theaccount = null;
-
-if (isset($_SESSION["account"]) && $_SESSION["account"]->getfName() != null ){
+if (isset($_SESSION["account"]) && $_SESSION["account"]->getRole() == 1){
   $account = $_SESSION["account"];
-} else {
-  header("location index.php");
-  exit;
-}
 
-
-if (isset($_POST["editAccount"])){
-  $theaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"], $_POST["id"]);
-  $fnameError = 0;
-  $lnameError = 0;
-  $phoneError = 0;
-  $emailError = 0;
-  $passwdError = 0;
-  $passwd2Error = 0;
-  $roleError = 0;
-
-}
-
-
-//MUOKKAA-BUTTON
-if (isset($_POST["editAcc"])){
-  $editaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"], $_POST["id"]);
-  $theaccount = $editaccount;
-  $fnameError = $theaccount->checkfName();
-  $lnameError = $theaccount->checklName();
-  $phoneError = $theaccount->checkPhone();
-  $emailError = $theaccount->checkEmail();
-  $passwdError = $theaccount->checkPasswd();
-  $passwd2Error = $theaccount->checkPasswd2();
-  $roleError = $theaccount->checkRole();
-
-
-  if($fnameError == 0 && $lnameError == 0 && $phoneError == 0 && $emailError == 0 && $passwdError == 0 && $passwd2Error == 0 && $roleError == 0){
-   try
-   {
-    $usedb = new AccountPDO();
-    $usedb->updateAccount($theaccount);
-  } catch (Exception $error) {
-    print($error->getMessage());
+  if(isset($_POST["editAccount"])){
+    $editaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"], $_POST["id"]);
+    $theaccount = $editaccount;
+    $fnameError = 0;
+    $lnameError = 0;
+    $phoneError = 0;
+    $emailError = 0;
+    $passwdError = 0;
+    $passwd2Error = 0;
+    $roleError = 0;
   }
-  $message = new Message();
-  $messagetitle = "Käyttäjän tietojen päivitys onnistui!";
-  $messagebody = "Siirrytään takaisin henkilöihin noin kolmen (3) sekunnin kuluttua..";
-  $message->setMessageTitle($messagetitle);
-  $message->setMessageBody($messagebody);
-  $_SESSION["editAccount"] = $message;
-  header("location: message.php");
-  exit;
-}
-}
+/*
+  if(isset($_SESSION["editAccount"])){
+    $theaccount = $_SESSION["editAccount"];
+    unset($_SESSION["editAccount"]);
+    $fnameError = 0;
+    $lnameError = 0;
+    $phoneError = 0;
+    $emailError = 0;
+    $passwdError = 0;
+    $passwd2Error = 0;
+    $roleError = 0;
+  }*/
 
-if(isset($_POST["backToAccMan"])){
-  unset($_SESSION["editAcc"]);
-  session_write_close();
-  header("location: accmanagement.php");
-  exit;
-}
+ 
 
-if($theaccount === null){
+  if (isset($_POST["editTheAccount"])){
+    $editaccount = new Account( $_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"], $_POST["id"]);
+    $theaccount = $editaccount;
+    
+    $fnameError = $theaccount->checkfName();
+    $lnameError = $theaccount->checklName();
+    $phoneError = $theaccount->checkPhone();
+    $emailError = $theaccount->checkEmail();
+    $passwdError = $theaccount->checkPasswd();
+    $passwd2Error = $theaccount->checkPasswd2();
+    $roleError = $theaccount->checkRole();
+
+    if($fnameError == 0 && $lnameError == 0 && $phoneError == 0 && $emailError == 0 && $passwdError == 0 && $passwd2Error == 0 && $roleError == 0){
+      $_SESSION["editAcc"] = $theaccount;
+      session_write_close();
+      header("location: accconfirm.php");
+      exit;
+    }
+
+  }
+
+  if (isset($_POST["back"])) {
+    header("location: accmanagement.php");
+    exit;
+  }
+
+} else {
   header("location: index.php");
   exit;
 }
 
-?>
-<?php require 'includes/logout-module.php'; ?>
 
+?>
+
+<?php require 'includes/logout-module.php'; ?>
 
 <!DOCTYPE html>
 <html lang="fi">
@@ -86,23 +81,7 @@ if($theaccount === null){
         <div class="col-md-4">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">
-
-                   <!-- <?php
-              //CHECKING IF WE HAVE STORED AN ACCOUNT TO SESSION THAT WE CAN PRINT
-                if(isset($_SESSION["editAcc"]) && $_SESSION["account"]->getRole() == 1){
-                  print('
-                    Muokataan profiilia: '. $_SESSION["editAcc"]->getfName() .' '. $_SESSION["editAcc"]->getfName() .'
-                    ');
-                } else {
-
-                }
-
-                ?>-->
-
-                <?php print("Tilin ". $theaccount->getEmail() ." tiedot"); ?>
-
-              </h3>
+              <h3 class="panel-title">Profiilin muokkaus</h3>
             </div>
             <div class="panel-body">
               <form accept-charset="UTF-8" role="form" method="post"  action="">
@@ -173,37 +152,21 @@ if($theaccount === null){
                    ?> 
                  </div>
                </div> 
-               <button class="btn btn-lg btn-success btn-block" type="button" name="editAcc" data-toggle='modal' data-target="#editAcc">Muokkaa</button> 
-               <button class="btn btn-lg  btn-block" formaction="accmanagement.php">Takaisin</button> 
+               <button class="btn btn-lg btn-success btn-block" type="submit" name="editTheAccount"  id="edit" >Muokkaa</button> 
+               <button class="btn btn-lg  btn-block" type="submit" name="back" >Takaisin</button> 
              </fieldset>
-
-             <div class='modal fade' id="editAcc" tabindex='-1' role='dialog' aria-labelledby='accEditLabel' aria-hidden='true'>
-              <div class='modal-dialog'>
-                <div class='modal-content'>
-                  <div class='modal-header'>
-                    <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-                    <h4 class='modal-title' id='accEditLabel'>Vahvista tilitietojen muutokset</h4>
-                  </div>
-                  <div class='modal-body'>
-                    Tallenna tilin muutokset?
-                  </div>
-                  <div class='modal-footer'>
-
-                    <button type='button' class='btn btn-default ' data-dismiss='modal' style="margin-bottom:5px;">Peruuta</button>
-                    <button class='btn btn-success ' type='submit' name='editAcc' style="margin-bottom:5px;">Tallenna</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-    </div>
-  </div>
+           </form>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+   <div class="col-md-4">
+   </div>
+ </div>
 </div>
-</div>
+
+
 
 
 <script src="js/rolehelper.js" type="text/javascript"></script>
@@ -214,6 +177,8 @@ $(function(){
   rh.checkRole();
 });
 </script>
+
+
 
 
 

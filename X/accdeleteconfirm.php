@@ -19,6 +19,7 @@ if(isset($_POST["back"])){
 }
 
 if (isset($_POST["confirm"])){
+   $theaccount = new Account($_POST["fname"], $_POST["lname"], $_POST["phone"], $_POST["email"], $_POST["passwd"], $_POST["passwd2"], $_POST["role"], $_POST["id"]);
   try
   {
     require_once "classes/accountPDO.php";

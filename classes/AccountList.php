@@ -1,10 +1,10 @@
 <?php
-
+require_once "core/init.php";
 class AccountList {
 
 	function searchAccountsNormal(){
 		try {
-			require_once "classes/accountPDO.php";
+
 			$usedb = new AccountPDO();
 			$result = $usedb->findAccounts($_POST["searchfield"]);
 			if(count($result) == 0 ){
@@ -40,7 +40,7 @@ class AccountList {
 
 	function searchAccountsAdmin(){
 		try {
-			require_once "accountPDO.php";
+
 			$usedb = new AccountPDO();
 			$result = $usedb->findAccounts($_POST["searchfield"]);
 			if(count($result) == 0 ){
@@ -54,9 +54,11 @@ class AccountList {
 			}
 			else {
 				print("<h3>Hakutulokset haulle: " . $_POST["searchfield"] . "</h3>");
+				$dataTarget = 0;
 				foreach($result as $listaccount) {
+					$dataTarget = $dataTarget + 1;
 					print("
-						<form method='post' action='' name='acclist'>
+						<form method='post' action='accedit.php' name='acclist'>
 						<input type='hidden' name='id' value='". $listaccount->getId() . "''>
 						<tr>
 						<td>". $listaccount->getfName() ."</td>
@@ -71,9 +73,29 @@ class AccountList {
 						<input name='role' type='hidden' value='". $listaccount->getRole() ."'>
 						<input name='passwd' type='hidden' value=''>
 						<input name='passwd2' type='hidden' value=''>
-						<td><button class='btn btn-warning btn-xs' type='submit' name='editAccount' formaction='accedit.php';return true;'>Muokkaa</td>
-						<td><button class='btn btn-danger btn-xs' type='submit' name='deleteAccount' formaction='accconfirm.php';return true;'>Poista</td>
+						<td><button class='btn btn-warning btn-xs' type='submit' name='editAccount' formaction='accedit.php';return true;'>Muokkaa</button></td>
+						<td><button class='btn btn-danger btn-xs'  type='button' data-toggle='modal' data-target='#deleteAcc". $dataTarget ."'>Poista</button></td>
 						</tr>
+
+						<div class='modal fade' id='deleteAcc". $dataTarget ."' tabindex='-1' role='dialog' aria-labelledby='accDeleteLabel' aria-hidden='true'>
+						<div class='modal-dialog'>
+						<div class='modal-content'>
+						<div class='modal-header'>
+						<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+						<h4 class='modal-title' id='accDeleteLabel'>Vahvista käyttäjän poisto</h4>
+						</div>
+						<div class='modal-body'>
+						Poistetaanko käyttäjätili ". $listaccount->getEmail() ."?
+						</div>
+						<div class='modal-footer'>
+						<button type='button' class='btn btn-default' data-dismiss='modal'>Peruuta</button>
+						<button class='btn btn-danger' type='submit' name='deleteAccount' formaction='message.php'>Poista</button>
+						</div>
+						</div>
+						</div>
+						</div>
+
+
 						</form>
 						");
 }
@@ -89,13 +111,17 @@ catch (Exception $error){
 function listAccountsAdmin(){
 	try
 	{
-		require_once "accountPDO.php";
-		$usedb = new accountPDO();
-		$result = $usedb->allAccounts();
 
+		$usedb = new AccountPDO();
+		$result = $usedb->allAccounts();
+		$dataTarget = 0;
 		foreach($result as $listaccount) {
+			$dataTarget = $dataTarget + 1;
 			print("
-				<form method='post'>
+
+
+				<form method='post' action='accedit.php'>
+
 				<input type='hidden' name='id' value='". $listaccount->getId() . "''>
 				<tr>
 				<td>". $listaccount->getfName() ."</td>
@@ -110,9 +136,30 @@ function listAccountsAdmin(){
 				<input name='role' type='hidden' value='". $listaccount->getRole() ."'>
 				<input name='passwd' type='hidden' value=''>
 				<input name='passwd2' type='hidden' value=''>
-				<td><button class='btn btn-warning btn-xs' type='submit' name='editAccount' formaction='accedit.php'>Muokkaa</td>
-				<td><button class='btn btn-danger btn-xs' type='submit' name='deleteAccount' formaction='accconfirm.php'>Poista</td>
+				<td><button class='btn btn-warning btn-xs' name='editAccount' data-toggle='modal'>Muokkaa</button></td>
+				<td><button class='btn btn-danger btn-xs'  type='button' data-toggle='modal' data-target='#deleteAcc". $dataTarget ."'>Poista</button></td>
 				</tr>
+
+				<div class='modal fade' id='deleteAcc". $dataTarget ."' tabindex='-1' role='dialog' aria-labelledby='accDeleteLabel' aria-hidden='true'>
+				<div class='modal-dialog'>
+				<div class='modal-content'>
+				<div class='modal-header'>
+				<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+				<h4 class='modal-title' id='accDeleteLabel'>Vahvista käyttäjän poisto</h4>
+				</div>
+				<div class='modal-body'>
+				Poistetaanko käyttäjätili ". $listaccount->getEmail() ."?
+				</div>
+				<div class='modal-footer'>
+				<button type='button' class='btn btn-default' data-dismiss='modal'>Peruuta</button>
+				<button class='btn btn-danger' type='submit' name='deleteAccount' formaction='message.php'>Poista</button>
+				</div>
+				</div>
+				</div>
+				</div>
+
+
+
 				</form>
 				");
 }
@@ -124,7 +171,7 @@ function listAccountsAdmin(){
 function listAccountsNormal(){
 	try
 	{
-		require_once "classes/accountPDO.php";
+
 		$usedb = new accountPDO();
 		$result = $usedb->allAccounts();
 
